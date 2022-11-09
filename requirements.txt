@@ -44,3 +44,4 @@ vine==5.0.0
 wrapt==1.12.1
 python-decouple==3.6
 gunicorn
+django-on-heroku
