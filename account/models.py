@@ -76,8 +76,8 @@ class MyUserManager(BaseUserManager):
 class SpeedPayUser(AbstractBaseUser, PermissionsMixin):
     uuid = models.UUIDField(unique=True, default=uuid_lib.uuid4)
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=50)
-    date_of_birth = models.DateField()
+    name = models.CharField(max_length=50, default="oluwaseyi")
+    date_of_birth = models.DateField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     is_staff = models.BooleanField(default=False)
 

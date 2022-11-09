@@ -62,7 +62,6 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
@@ -142,7 +141,6 @@ db.json
 # Visual Studio Code # 
 .vscode
 .history
-settings.py
 b-env
 
 # Project

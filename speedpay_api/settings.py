@@ -29,7 +29,7 @@ SECRET_KEY = config(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["oluwaseyi-mini-bank-api.herokuapp.com"]
 
 
 # Application definition
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "drf_yasg",
     "django_filters",
+    "django_on_heroku",
     # projectapps
     "account",
 ]
@@ -59,7 +60,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -156,6 +157,10 @@ PUBLIC_SCHEMA_URLCONF = "speedpay_api.urls"
 AUTH_USER_MODEL = "account.SpeedPayUser"
 WEB_TOKEN_EXPIRY = config("WEB_TOKEN_EXPIRY", cast=int)
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+CSRF_TRUSTED_ORIGINS = ["https://oluwaseyi-mini-bank-api.herokuapp.com"]
 
 import django_on_heroku
 
