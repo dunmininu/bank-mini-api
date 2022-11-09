@@ -157,6 +157,9 @@ PUBLIC_SCHEMA_URLCONF = "speedpay_api.urls"
 AUTH_USER_MODEL = "account.SpeedPayUser"
 WEB_TOKEN_EXPIRY = config("WEB_TOKEN_EXPIRY", cast=int)
 
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 CSRF_TRUSTED_ORIGINS = ["https://oluwaseyi-mini-bank-api.herokuapp.com"]
 
 import django_on_heroku
