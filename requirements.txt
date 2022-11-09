@@ -17,7 +17,7 @@ django-imagekit==4.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.0.0
 drf-nested-routers==0.93.4
-drf-yasg==1.20.0
+drf-yasg==1.21.4
 idna==3.4
 inflection==0.5.1
 itypes==1.2.0
@@ -45,3 +45,4 @@ wrapt==1.12.1
 python-decouple==3.6
 gunicorn
 django-on-heroku
+drf-yasg2
