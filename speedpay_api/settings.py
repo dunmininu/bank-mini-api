@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "drf_yasg",
     "django_filters",
+    "django_on_heroku",
     # projectapps
     "account",
 ]
