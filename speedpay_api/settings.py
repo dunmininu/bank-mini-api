@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -157,6 +157,7 @@ PUBLIC_SCHEMA_URLCONF = "speedpay_api.urls"
 AUTH_USER_MODEL = "account.SpeedPayUser"
 WEB_TOKEN_EXPIRY = config("WEB_TOKEN_EXPIRY", cast=int)
 
+CSRF_TRUSTED_ORIGINS = ["https://oluwaseyi-mini-bank-api.herokuapp.com"]
 
 import django_on_heroku
 
