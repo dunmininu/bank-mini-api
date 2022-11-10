@@ -58,7 +58,6 @@ class BankAccountDetailSerializer(serializers.ModelSerializer):
         fields = [
             "account_number",
             "account_balance",
-            # "created_at",
         ]
 
 
