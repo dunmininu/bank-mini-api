@@ -94,32 +94,34 @@ class SpeedPayUserViewSet(
 
     @action(detail=False, methods=["get"], permission_classes=[AllowAny])
     def list_of_users(self, request, *args, **kwargs):
-        account_qs = BankAccount.objects.all()
-        user_qs = User.objects.all().values(
-            "id",
-            "uuid",
-            "email",
-            "name",
-            "date_of_birth",
-        )
+        # account_qs = BankAccount.objects.all()
+        user_qs = User.objects.all()
+        serializer = UserDetailsSerializer(user_qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        list_user_n_accounts = []
-        data = {}
+        # print(user_qs, "see users")
 
-        for user in user_qs:
-            account_details = account_qs.filter(user=user["id"]).values(
-                "account_number",
-                "account_balance",
-                "created_at",
-            )
+        # list_user_n_accounts = []
+        # data = {}
 
-        data["user"] = user
-        data["account_details"] = account_details
+        # for user in user_qs:
+        #     # print(user, "lets see user")
+        #     account_details = account_qs.filter(user__id=user["id"]).values(
+        #         "account_number",
+        #         "account_balance",
+        #         "created_at",
+        #     )
+        #     print(account_details, "acct details")
+        #     if account_details:
+        #         data["user"] = user
+        #         data["account_details"] = account_details
 
-        list_user_n_accounts.append(data)
+        #         list_user_n_accounts.append(data)
+        # print(list_user_n_accounts)
+        # print("--------------------------------------------")
 
-        data = {"list_of_users": list_user_n_accounts}
-        return Response(data=data, status=status.HTTP_201_CREATED)
+        # data = list_user_n_accounts
+        # return Response(data=data, status=status.HTTP_201_CREATED)
 
     @swagger_auto_schema(request_body=LoginSerializer)
     @transaction.atomic

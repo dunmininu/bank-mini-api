@@ -56,10 +56,9 @@ class BankAccountDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankAccount
         fields = [
-            "user",
             "account_number",
             "account_balance",
-            "created_at",
+            # "created_at",
         ]
 
 
@@ -75,9 +74,14 @@ class BankAccountCreateSerializer(serializers.ModelSerializer):
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    bank_account = serializers.SerializerMethodField()
+
     class Meta:
         model = SpeedPayUser
-        fields = ["id", "email", "name", "date_of_birth"]
+        fields = ["id", "email", "name", "date_of_birth", "bank_account"]
+
+    def get_bank_account(self, obj):
+        return BankAccountDetailSerializer(obj.user_bank_account.all(), many=True).data
 
 
 class UserDetailsTokenSerializer(serializers.Serializer):
