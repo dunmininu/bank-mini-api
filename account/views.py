@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model, logout
 from django.db import transaction
 from django.http import HttpResponse
+from django.db.models import F
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
@@ -99,30 +100,6 @@ class SpeedPayUserViewSet(
         serializer = UserDetailsSerializer(user_qs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-        # print(user_qs, "see users")
-
-        # list_user_n_accounts = []
-        # data = {}
-
-        # for user in user_qs:
-        #     # print(user, "lets see user")
-        #     account_details = account_qs.filter(user__id=user["id"]).values(
-        #         "account_number",
-        #         "account_balance",
-        #         "created_at",
-        #     )
-        #     print(account_details, "acct details")
-        #     if account_details:
-        #         data["user"] = user
-        #         data["account_details"] = account_details
-
-        #         list_user_n_accounts.append(data)
-        # print(list_user_n_accounts)
-        # print("--------------------------------------------")
-
-        # data = list_user_n_accounts
-        # return Response(data=data, status=status.HTTP_201_CREATED)
-
     @swagger_auto_schema(request_body=LoginSerializer)
     @transaction.atomic
     @action(detail=False, methods=["post"], permission_classes=[AllowAny])
@@ -189,17 +166,23 @@ class TransactionViewSet(
 
         if transaction.transaction_type == "Deposit":
             bank_account = transaction.bank_account
-            amount = serializer["amount"]
+            amount = transaction.amount
 
-            update_balance = bank_account.account_balance + Decimal(amount.value)
-            new_balance = BankAccount.objects.update(account_balance=update_balance)
+            # bank_account.account_balance + amount
+            # new_balance = bank_account.account_balance + amount
+            BankAccount.objects.filter(id=serializer["bank_account"].value).update(
+                account_balance=F("account_balance") + amount
+            )
+
+            b = BankAccount.objects.get(id=serializer["bank_account"].value)
+            new_balance = b.account_balance
             transaction = Transaction.objects.get(id=transaction.id)
             transaction.generate_transaction_number()
             transaction.save()
             data = {
                 "transaction": transaction.transaction_id,
                 "message": "transaction successful",
-                "new_balance": new_balance.account_balance,
+                "new_balance": new_balance,
             }
             return Response(data=data, status=status.HTTP_201_CREATED)
 
@@ -207,16 +190,19 @@ class TransactionViewSet(
             bank_account = transaction.bank_account
             amount = serializer["amount"]
 
+            b = BankAccount.objects.get(id=serializer["bank_account"].value)
+
             if amount.value > bank_account.account_balance:
                 return HttpResponse("Insufficient funds")
             else:
-                update_balance = bank_account.account_balance - Decimal(amount.value)
-            BankAccount.objects.update(account_balance=update_balance)
-            new_balance = bank_account.account_balance
+                BankAccount.objects.filter(id=b.id).update(
+                    account_balance=F("account_balance") - Decimal(amount.value)
+                )
+
+            new_balance = BankAccount.objects.get(id=b.id).account_balance
             transaction = Transaction.objects.get(id=transaction.id)
             transaction.generate_transaction_number()
             transaction.save()
-            print(dir(new_balance))
             data = {
                 "transaction": transaction.transaction_id,
                 "message": "transaction successful",
